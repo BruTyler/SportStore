@@ -1,5 +1,4 @@
-﻿
-namespace DataAccess.DbProvider
+﻿namespace DataAccess.DbProvider
 {
     public abstract class EFBaseRepository
     {

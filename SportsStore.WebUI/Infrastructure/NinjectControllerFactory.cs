@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Ninject;
-using SportsStore.Domain.Entities;
+using Ninject.Web.Common;
 using SportsStore.Domain.Abstract;
 using SportsStore.Domain.Concrete;
 using System.Configuration;
@@ -17,25 +14,22 @@ namespace SportsStore.WebUI.Infrastructure
 {
     public class NinjectControllerFactory: DefaultControllerFactory
     {
-        private IKernel ninjectKernel;
+        private readonly IKernel _ninjectKernel;
         public NinjectControllerFactory()
         {
-            // создание контейнера
-            ninjectKernel = new StandardKernel();
+            _ninjectKernel = new StandardKernel();
             AddBindings();
         }
         protected override IController GetControllerInstance(RequestContext requestContext, Type controllerType)
         {
-            // получение объекта контроллера из контейнера
-            // используя его тип
             return controllerType == null
                 ? null
-                : (IController)ninjectKernel.Get(controllerType);
+                : (IController)_ninjectKernel.Get(controllerType);
         }
         private void AddBindings()
         {
-
-            ninjectKernel.Bind<IProductRepository>().To<EFProductRepository>();
+            _ninjectKernel.Bind<EFDbContext>().ToSelf().InRequestScope();
+            _ninjectKernel.Bind<IProductRepository>().To<EFProductRepository>();
 
 
             EmailSettings emailSettings = new EmailSettings
@@ -43,9 +37,9 @@ namespace SportsStore.WebUI.Infrastructure
                 WriteAsFile = bool.Parse(ConfigurationManager.AppSettings["Email.WriteAsFile"] ?? "false")
             };
 
-            ninjectKernel.Bind<IOrderProcessor>().To<EmailOrderProcessor>().WithConstructorArgument("settings", emailSettings);
+            _ninjectKernel.Bind<IOrderProcessor>().To<EmailOrderProcessor>().WithConstructorArgument("settings", emailSettings);
 
-            ninjectKernel.Bind<IAuthProvider>().To<FormsAuthProvider>();
+            _ninjectKernel.Bind<IAuthProvider>().To<FormsAuthProvider>();
         }
     }
 }
