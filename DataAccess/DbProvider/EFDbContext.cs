@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity;
 using SportsStore.Domain.Entities;
 
-namespace SportsStore.Domain.Concrete
+namespace DataAccess.DbProvider
 {
     public class EFDbContext: DbContext
     {

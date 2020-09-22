@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DbProvider\EFBaseRepository.cs" />
     <Compile Include="DbProvider\EFDbContext.cs" />
     <Compile Include="DbProvider\EFProductRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

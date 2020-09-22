@@ -11,6 +11,7 @@ using SportsStore.Domain.Concrete;
 using System.Configuration;
 using SportsStore.WebUI.Infrastructure.Abstract;
 using SportsStore.WebUI.Infrastructure.Concrete;
+using DataAccess.DbProvider;
 
 namespace SportsStore.WebUI.Infrastructure
 {

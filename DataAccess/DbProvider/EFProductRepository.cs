@@ -3,25 +3,23 @@ using System.Linq;
 using SportsStore.Domain.Abstract;
 using SportsStore.Domain.Entities;
 
-namespace SportsStore.Domain.Concrete
+namespace DataAccess.DbProvider
 {
-    public class EFProductRepository : IProductRepository
+    public class EFProductRepository : EFBaseRepository, IProductRepository
     {
-        private readonly EFDbContext context = new EFDbContext();
-
         public IQueryable<Product> Products
         {
-            get { return context.Products; }
+            get { return _db.Products; }
         }
 
         public Product DeleteProduct(int productID)
         {
-            var dbEntry = context.Products.Find(productID);
+            var dbEntry = _db.Products.Find(productID);
 
             if (dbEntry != null)
             {
-                context.Products.Remove(dbEntry);
-                context.SaveChanges();
+                _db.Products.Remove(dbEntry);
+                _db.SaveChanges();
             }
 
             return dbEntry;
@@ -33,10 +31,10 @@ namespace SportsStore.Domain.Concrete
                 throw new ArgumentException("empty product");
 
             if (product.ProductID == 0)
-                context.Products.Add(product);
+                _db.Products.Add(product);
             else
             {
-                var dbEntry = context.Products.Find(product.ProductID);
+                var dbEntry = _db.Products.Find(product.ProductID);
                 if (dbEntry != null)
                 {
                     dbEntry.Category = product.Category;
@@ -48,7 +46,7 @@ namespace SportsStore.Domain.Concrete
                 }
             }
 
-            context.SaveChanges();
+            _db.SaveChanges();
         }
     }
 }
